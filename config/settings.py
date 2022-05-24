@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'balance_game.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
