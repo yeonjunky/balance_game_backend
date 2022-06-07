@@ -1,6 +1,4 @@
-from django.shortcuts import render, get_object_or_404
-from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
+from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
