@@ -15,16 +15,16 @@ from .models import Game
 def games(request):
     if request.method == 'GET':
 
-        json_serializer = serializers.serialize('json', Game.objects.all())
+        games_list = list(Game.objects.values())
+
         return JsonResponse(
-            {"data": json.loads(json_serializer)}
+            {"data": games_list}
         )
 
     elif request.method == 'POST':
-        print(request.POST)
-        choices = request.POST.getlist('choices')
+        choices = json.loads(request.body)["choices"]
 
-        game = Game(choice_1_text=choices[0], choice_2_text=choices[1])
+        game = Game(choice_1_text=choices['first_choice'], choice_2_text=choices['second_choice'])
 
         try:
             game.clean_fields()
@@ -40,7 +40,7 @@ def games(request):
             {
                 'status': '201',
                 'description': 'new game is successfully created.',
-                game.id: [game.choice_1_text, game.choice_2_text],
+                f'id {game.id}': [game.choice_1_text, game.choice_2_text],
             },
 
             status=201
