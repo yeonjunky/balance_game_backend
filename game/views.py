@@ -30,16 +30,19 @@ def games(request, game_id=0):
             )
 
     elif request.method == 'POST':
-        choices = json.loads(request.body)["choices"]
+        body = json.loads(request.body)
 
-        game = Game(choice_1_text=choices['first_choice'], choice_2_text=choices['second_choice'])
+        title = body["title"]
+        choices = body["choices"]
+
+        game = Game(title=title, choice_1_text=choices['first_choice'], choice_2_text=choices['second_choice'])
 
         try:
             game.clean_fields()
 
         except ValidationError as e:
             return JsonResponse(
-                {'status': '400', 'description': 'invalid choices text'},
+                {'status': '400', 'description': 'data are invalid'},
                 status=400
             )
 
