@@ -18,6 +18,7 @@ def games(request, game_id=0):
             return JsonResponse(
                 {"data": {
                     "id": game.id,
+                    "title": game.title,
                     "first_choice": game.choice_1_text,
                     "second_choice": game.choice_2_text
                 }})
@@ -51,7 +52,7 @@ def games(request, game_id=0):
             {
                 'status': 201,
                 'description': 'new game is successfully created.',
-                f'id {game.id}': [game.choice_1_text, game.choice_2_text],
+                f'id {game.id}': [game.title, game.choice_1_text, game.choice_2_text],
             },
 
             status=201
@@ -70,14 +71,14 @@ def games(request, game_id=0):
             return JsonResponse({
                 'status': '200',
                 'description': 'game is updated',
-                f'id {game.id}': [game.choice_1_text, game.choice_2_text],
+                f'id {game.id}': [game.title, game.choice_1_text, game.choice_2_text],
             },
 
                 status=200
             )
 
         else:
-            JsonResponse({
+            return JsonResponse({
                 'status': '400',
                 'description': "couldn't received game id"
             },
