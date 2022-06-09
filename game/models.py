@@ -4,10 +4,14 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Game(models.Model):
+    title = models.CharField(max_length=256)
     choice_1_text = models.CharField(max_length=256)
     choice_2_text = models.CharField(max_length=256)
 
     def clean(self):
+        if not self.title:
+            raise ValidationError("Title is empty")
+
         if self.choice_1_text is None or self.choice_2_text is None:
             raise ValidationError("At least one choice is blank")
 
