@@ -83,4 +83,30 @@ def games(request, game_id=0):
             )
 
     elif request.method == "DELETE":
-        pass
+        if game_id:
+            game = get_object_or_404(Game, pk=game_id)
+            delete_id = game.id
+            delete_title = game.title
+
+            game.delete()
+
+            return JsonResponse({
+                'status': '200',
+                'description': 'game is successfully deleted',
+                'id': delete_id,
+                'title': delete_title
+            },
+
+                status=200
+            )
+
+        else:
+            return JsonResponse({
+                'status': '400',
+                'description': "couldn't received game id"
+            },
+
+                status=400
+            )
+
+
