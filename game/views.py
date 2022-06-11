@@ -60,8 +60,12 @@ def games(request, game_id=0):
 
     elif request.method == "PUT":
         if game_id:
-            choices = json.loads(request.body)['choices']
+            body = json.loads(request.body)
+            title = body['title']
+            choices = body['choices']
             game = get_object_or_404(Game, pk=game_id)
+
+            game.title = title
 
             game.choice_1_text = choices['first_choice']
             game.choice_2_text = choices['second_choice']
