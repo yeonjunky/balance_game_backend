@@ -2,33 +2,31 @@ from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 import json
 
 from .models import Game
+from .serializers import GameSerializer
 
 
 # Create your views here.
 @csrf_exempt
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def games(request, game_id=0):
     if request.method == 'GET':
         if game_id:
             game = get_object_or_404(Game, pk=game_id)
 
-            return JsonResponse(
-                {"data": {
-                    "id": game.id,
-                    "title": game.title,
-                    "first_choice": game.choice_1_text,
-                    "second_choice": game.choice_2_text
-                }})
+            serializer = GameSerializer(game)
+
+            return Response(serializer.data)
 
         else:
-            games_list = list(Game.objects.values())
+            serializer = GameSerializer(Game.objects.all(), many=True)
 
-            return JsonResponse(
-                {"data": games_list}
-            )
+            return Response(serializer.data)
 
     elif request.method == 'POST':
         body = json.loads(request.body)
@@ -42,13 +40,13 @@ def games(request, game_id=0):
             game.clean_fields()
 
         except ValidationError as e:
-            return JsonResponse(
+            return Response(
                 {'status': '400', 'description': 'data are invalid'},
                 status=400
             )
 
         game.save()
-        return JsonResponse(
+        return Response(
             {
                 'status': 201,
                 'description': 'new game is successfully created.',
@@ -72,7 +70,7 @@ def games(request, game_id=0):
 
             game.save()
 
-            return JsonResponse({
+            return Response({
                 'status': '200',
                 'description': 'game is updated',
                 f'id {game.id}': [game.title, game.choice_1_text, game.choice_2_text],
@@ -82,7 +80,7 @@ def games(request, game_id=0):
             )
 
         else:
-            return JsonResponse({
+            return Response({
                 'status': '400',
                 'description': "couldn't received game id"
             },
@@ -98,23 +96,17 @@ def games(request, game_id=0):
 
             game.delete()
 
-            return JsonResponse({
-                'status': '200',
-                'description': 'game is successfully deleted',
-                'id': delete_id,
-                'title': delete_title
+            return Response({
+                "deleted_id": delete_id,
+                "deleted_title": delete_title,
             },
-
                 status=200
             )
 
         else:
-            return JsonResponse({
+            return Response({
                 'status': '400',
                 'description': "couldn't received game id"
             },
-
                 status=400
             )
-
-
