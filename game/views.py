@@ -28,10 +28,10 @@ def games(request, game_id=0):
             return Response(serializer.data)
 
     elif request.method == 'POST':
-        body = json.loads(request.body)
+        data = request.data
 
-        title = body["title"]
-        choices = body["choices"]
+        title = data["title"]
+        choices = data["choices"]
 
         game = Game(title=title, choice_1_text=choices['first_choice'], choice_2_text=choices['second_choice'])
 
@@ -57,9 +57,9 @@ def games(request, game_id=0):
 
     elif request.method == "PUT":
         if game_id:
-            body = json.loads(request.body)
-            title = body['title']
-            choices = body['choices']
+            data = request.data
+            title = data['title']
+            choices = data['choices']
             game = get_object_or_404(Game, pk=game_id)
 
             game.title = title
