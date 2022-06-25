@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import Token
 import rest_framework.authtoken.views
 
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 
 # Create your views here.
@@ -13,7 +14,13 @@ def sign_in(request):
     if request.method == 'POST':
         data = request.data
 
-    return None
+        user = authenticate(username=data['id'], password=data['password'])
+
+        if user:
+            token = Token.objects.create(user=user)
+            return Response({"Token": token.key})
+        else:
+            return Response(status=401)
 
 
 @api_view(['POST'])
@@ -26,3 +33,5 @@ def sign_up(request):
 
         token = Token.objects.create(user=user)
         return Response({"Token": token.key})
+
+
