@@ -1,6 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
 import rest_framework.authtoken.views
 
@@ -35,3 +35,10 @@ def sign_up(request):
         return Response({"Token": token.key})
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def sign_out(request):
+    if request.method == 'POST':
+        request.data.auth_token.delete()
+
+        return Response(status=204)
