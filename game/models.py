@@ -29,7 +29,9 @@ class Choice(models.Model):
     text = models.CharField(max_length=256)
     voted_num = models.PositiveIntegerField(default=0)
 
-
+    def vote(self):
+        self.voted_num += 1
+        self.save()
 
     def __str__(self):
         return self.text
