@@ -7,6 +7,8 @@ class Game(models.Model):
     title = models.CharField(max_length=256)
     choice_1_text = models.CharField(max_length=256)
     choice_2_text = models.CharField(max_length=256)
+    vote_1 = models.PositiveIntegerField(default=0)
+    vote_2 = models.PositiveIntegerField(default=0)
 
     def clean(self):
         if not self.title:
@@ -17,3 +19,8 @@ class Game(models.Model):
 
         elif self.choice_1_text == self.choice_2_text:
             raise ValidationError("The choices' text is the same")
+
+
+class Choice(models.Model):
+    text = models.CharField(max_length=256)
+    voted_num = models.PositiveIntegerField(default=0)
