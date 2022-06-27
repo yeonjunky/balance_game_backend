@@ -20,7 +20,15 @@ class Game(models.Model):
         elif self.choice_1_text == self.choice_2_text:
             raise ValidationError("The choices' text is the same")
 
+    def __str__(self):
+        return self.title
+
 
 class Choice(models.Model):
     text = models.CharField(max_length=256)
     voted_num = models.PositiveIntegerField(default=0)
+
+
+
+    def __str__(self):
+        return self.text
