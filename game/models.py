@@ -25,6 +25,7 @@ class Game(models.Model):
 
 
 class Choice(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     text = models.CharField(max_length=256)
     voted_num = models.PositiveIntegerField(default=0)
 
