@@ -27,10 +27,10 @@ class Game(models.Model):
 class Choice(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     text = models.CharField(max_length=256)
-    voted_num = models.PositiveIntegerField(default=0)
+    votes = models.PositiveIntegerField(default=0)
 
     def vote(self):
-        self.voted_num += 1
+        self.votes += 1
         self.save()
 
     def __str__(self):
