@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate
 
 # Create your views here.
 @api_view(['POST'])
-# @permission_classes([AllowAny])
+@permission_classes([AllowAny])
 def sign_in(request):
     if request.method == 'POST':
         data = request.data
@@ -26,6 +26,7 @@ def sign_in(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def sign_up(request):
     if request.method == 'POST':
         data = request.data
