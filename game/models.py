@@ -33,5 +33,9 @@ class Choice(models.Model):
         self.votes += 1
         self.save()
 
+    def clean(self):
+        if not self.text:
+            raise ValidationError("text is empty")
+
     def __str__(self):
         return self.text
