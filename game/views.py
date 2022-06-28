@@ -17,7 +17,6 @@ def games(request, game_id=0):
     if request.method == 'GET':
         if game_id:
             game = get_object_or_404(Game, pk=game_id)
-
             serializer = GameSerializer(game)
 
             return Response(serializer.data)
@@ -29,27 +28,23 @@ def games(request, game_id=0):
 
     elif request.method == 'POST':
         data = request.data
-
-        title = data["title"]
-        choices = data["choices"]
-
-        game = Game(title=title, choice_1_text=choices['first_choice'], choice_2_text=choices['second_choice'])
+        game_serializer = GameSerializer(data=data)
 
         try:
-            game.clean_fields()
+            game_serializer.is_valid(True)
 
-        except ValidationError as e:
+        except ValidationError:
             return Response(
                 {'status': '400', 'description': 'data are invalid'},
                 status=400
             )
 
-        game.save()
+        game_serializer.save()
         return Response(
             {
                 'status': 201,
                 'description': 'new game is successfully created.',
-                f'id {game.id}': [game.title, game.choice_1_text, game.choice_2_text],
+                'game': game_serializer.data,
             },
 
             status=201
