@@ -28,10 +28,10 @@ def games(request, game_id=0):
 
     elif request.method == 'POST':
         data = request.data
-        game_serializer = GameSerializer(data=data)
+        serializer = GameSerializer(data=data)
 
         try:
-            game_serializer.is_valid(True)
+            serializer.is_valid(True)
 
         except ValidationError:
             return Response(
@@ -39,12 +39,12 @@ def games(request, game_id=0):
                 status=400
             )
 
-        game_serializer.save()
+        serializer.save()
         return Response(
             {
                 'status': 201,
                 'description': 'new game is successfully created.',
-                'game': game_serializer.data,
+                'game': serializer.data,
             },
 
             status=201
