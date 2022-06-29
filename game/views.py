@@ -19,7 +19,13 @@ def games(request, game_id=0):
             game = get_object_or_404(Game, pk=game_id)
             serializer = GameSerializer(game)
 
-            return Response(serializer.data)
+            return Response(
+                {
+                    'status': 200,
+                    'game': serializer.data
+                },
+                status=200
+            )
 
         else:
             serializer = GameSerializer(Game.objects.all(), many=True)
