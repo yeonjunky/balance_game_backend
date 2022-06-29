@@ -9,7 +9,7 @@ Api Examples
 
 #### [api paths](#Paths)
 #### [games request and response example](#games-request-body-and-response-example)
-#### [users request and response example](#)
+#### [users request and response example](#users-request-body-and-response-example)
 
 ### Paths
 ```
