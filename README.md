@@ -28,6 +28,7 @@ GET
 // games/  
 
 {
+    "status": 200,
     "games": [
         {
             "id": 9,
@@ -67,20 +68,23 @@ GET
 // games/<int:game_id>/
 
 {
-    "id": 10,
-    "title": "woooo",
-    "choices": [
+  "status": 200,
+  "game": {
+      "id": 10,
+      "title": "woooo",
+      "choices": [
         {
-            "id": 3,
-            "text": "fuuuuu",
-            "votes": 0
+          "id": 3,
+          "text": "fuuuuu",
+          "votes": 0
         },
         {
-            "id": 4,
-            "text": "barrr",
-            "votes": 0
+          "id": 4,
+          "text": "barrr",
+          "votes": 0
         }
-    ]
+      ]
+}
 }
 ```
 
