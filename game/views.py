@@ -24,7 +24,13 @@ def games(request, game_id=0):
         else:
             serializer = GameSerializer(Game.objects.all(), many=True)
 
-            return Response(serializer.data)
+            return Response(
+                {
+                    'status': 200,
+                    'games': serializer.data,
+                },
+                status=200
+            )
 
     elif request.method == 'POST':
         data = request.data
@@ -35,7 +41,10 @@ def games(request, game_id=0):
 
         except ValidationError:
             return Response(
-                {'status': '400', 'description': 'data are invalid'},
+                {
+                    'status': 400,
+                    'description': 'data are invalid'
+                },
                 status=400
             )
 
@@ -46,7 +55,6 @@ def games(request, game_id=0):
                 'description': 'new game is successfully created.',
                 'game': serializer.data,
             },
-
             status=201
         )
 
@@ -68,21 +76,21 @@ def games(request, game_id=0):
 
             serializer.save()
 
-            return Response({
-                'status': '200',
-                'description': 'game is updated',
-                'game': serializer.data,
-            },
-
+            return Response(
+                {
+                    'status': 200,
+                    'description': 'game is updated',
+                    'game': serializer.data,
+                },
                 status=200
             )
 
         else:
-            return Response({
-                'status': '400',
-                'description': "couldn't received game id"
-            },
-
+            return Response(
+                {
+                    'status': 400,
+                    'description': "couldn't received game id"
+                },
                 status=400
             )
 
@@ -95,16 +103,17 @@ def games(request, game_id=0):
             game.delete()
 
             return Response({
-                "deleted_game_id": delete_id,
-                "deleted_game_title": delete_title,
-                "description": "game is successfully deleted"
+                'status': 200,
+                'deleted_game_id': delete_id,
+                'deleted_game_title': delete_title,
+                'description': 'game is successfully deleted'
             },
                 status=200
             )
 
         else:
             return Response({
-                'status': '400',
+                'status': 400,
                 'description': "couldn't received game id"
             },
                 status=400
