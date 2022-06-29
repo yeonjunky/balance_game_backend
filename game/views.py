@@ -95,8 +95,8 @@ def games(request, game_id=0):
             game.delete()
 
             return Response({
-                "deleted_id": delete_id,
-                "deleted_title": delete_title,
+                "deleted_game_id": delete_id,
+                "deleted_game_title": delete_title,
                 "description": "game is successfully deleted"
             },
                 status=200
