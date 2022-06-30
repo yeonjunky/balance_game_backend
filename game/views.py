@@ -124,3 +124,8 @@ def games(request, game_id=0):
             },
                 status=400
             )
+
+@api_view(['POST'])
+def vote(request, choice_id):
+    if request.method == 'POST':
+        pass
