@@ -22,7 +22,6 @@ class GameSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'choices', )
 
     def create(self, validated_data):
-        print(validated_data)
         choices_data = validated_data.pop('choices')
         game = Game.objects.create(**validated_data)
 
@@ -32,7 +31,6 @@ class GameSerializer(serializers.ModelSerializer):
         return game
 
     def update(self, instance, validated_data):
-        print(validated_data)
         choices_data = validated_data.pop('choices')
 
         instance.title = validated_data.get('title', instance.title)
