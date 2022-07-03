@@ -1,12 +1,18 @@
 from rest_framework import serializers
 
-from .models import Game, Choice
+from .models import Game, Choice, Vote
+
+
+class VoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vote
+        fields = '__all__'
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        fields = ('id', 'text', 'votes')
+        fields = ('id', 'text', )
 
     def update(self, instance, validated_data):
         instance.text = validated_data.get('text', instance.text)
@@ -16,17 +22,20 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
     choices = ChoiceSerializer(many=True)
+    # votes = VoteSerializer(many=True)
 
     class Meta:
         model = Game
-        fields = ('id', 'title', 'choices', )
+        fields = ('id', 'title', 'choices',)
+        # read_only_fields = ('votes', )
 
     def create(self, validated_data):
         choices_data = validated_data.pop('choices')
         game = Game.objects.create(**validated_data)
 
-        for choice_data in choices_data:
-            Choice.objects.create(game=game, **choice_data)
+        for i in range(2):
+            c = Choice.objects.create(game=game, **choices_data[i])
+            Vote.objects.create(choice=c, side=bool(i))
 
         return game
 
