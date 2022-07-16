@@ -33,6 +33,7 @@ class Choice(models.Model):
 
 
 class Vote(models.Model):
-    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, default=None, related_name='votes')
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE, default=None, related_name='votes')
     users = models.ManyToManyField(User, related_name='users')
-    side = models.BooleanField()  # left side choice : False, right side choice : True
+    side = models.BooleanField(default=None)  # left side choice : False, right side choice : True
