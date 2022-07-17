@@ -125,7 +125,44 @@ def games(request, game_id=0):
                 status=400
             )
 
+
 @api_view(['POST'])
-def vote(request, choice_id):
+def vote(request, game_id):
     if request.method == 'POST':
-        pass
+        data = request.data
+
+        game = get_object_or_404(Game, pk=game_id)
+        serializer = GameSerializer(game)
+        user = request.user
+        votes = game.votes.all()
+
+        left = votes.filter(side=False)[0]
+        right = votes.filter(side=True)[0]
+
+        # user is already voted
+        if game.voted_users.filter(id=user.id).exists():
+            if data['vote']:
+                left.users.remove(user)
+                right.users.add(user)
+
+            else:
+                right.users.remove(user)
+                left.user.remove(user)
+
+            right.save()
+            left.save()
+
+        else:
+            v = votes.filter(side=data['vote'])[0]
+            v.users.add(user)
+
+            game.voted_users.add(user)
+
+            v.save()
+            game.save()
+
+        return Response({
+            'game': serializer.data
+        },
+            status=200
+        )
