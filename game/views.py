@@ -131,38 +131,43 @@ def vote(request, game_id):
     if request.method == 'POST':
         data = request.data
 
-        game = get_object_or_404(Game, pk=game_id)
-        serializer = GameSerializer(game)
-        user = request.user
-        votes = game.votes.all()
+        if data['method'] == 'vote':
 
-        left = votes.filter(side=False)[0]
-        right = votes.filter(side=True)[0]
+            game = get_object_or_404(Game, pk=game_id)
+            serializer = GameSerializer(game)
+            user = request.user
+            votes = game.votes.all()
 
-        # user is already voted
-        if game.voted_users.filter(id=user.id).exists():
-            if data['vote']:
-                left.users.remove(user)
-                right.users.add(user)
+            left = votes.filter(side=False)[0]
+            right = votes.filter(side=True)[0]
+
+            # user is already voted
+            if game.voted_users.filter(id=user.id).exists():
+                if data['vote'] and left.users.filter(id=user.id).exists():
+                    left.users.remove(user)
+                    right.users.add(user)
 
                 elif not data['vote'] and right.users.filter(id=user.id).exists():
                     right.users.remove(user)
                     left.users.add(user)
 
-            right.save()
-            left.save()
+                right.save()
+                left.save()
 
-        else:
-            v = votes.filter(side=data['vote'])[0]
-            v.users.add(user)
+            else:
+                v = votes.filter(side=data['vote'])[0]
+                v.users.add(user)
 
-            game.voted_users.add(user)
+                game.voted_users.add(user)
 
-            v.save()
-            game.save()
+                v.save()
+                game.save()
 
-        return Response({
-            'game': serializer.data
-        },
-            status=200
-        )
+            return Response({
+                'game': serializer.data
+            },
+                status=200
+            )
+
+        elif data['method'] == 'cancel':
+            pass
