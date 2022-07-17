@@ -145,9 +145,9 @@ def vote(request, game_id):
                 left.users.remove(user)
                 right.users.add(user)
 
-            else:
-                right.users.remove(user)
-                left.user.remove(user)
+                elif not data['vote'] and right.users.filter(id=user.id).exists():
+                    right.users.remove(user)
+                    left.users.add(user)
 
             right.save()
             left.save()
