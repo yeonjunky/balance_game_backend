@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 from .models import Game
 from .serializers import GameSerializer
@@ -127,6 +127,7 @@ def games(request, game_id=0):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def vote(request, game_id):
     if request.method == 'POST':
         data = request.data
@@ -170,4 +171,31 @@ def vote(request, game_id):
             )
 
         elif data['method'] == 'cancel':
-            pass
+            game = get_object_or_404(Game, pk=game_id)
+            user = request.user
+
+            if game.voted_users.filter(id=user.id).exists():
+                # votes = game.votes.all()
+                v = game.votes.filter(side=data['vote'])[0]
+
+                v.users.remove(user)
+                game.voted_users.remove(user)
+
+                v.save()
+                game.save()
+
+                return Response({
+                    "status": 200,
+                    "Description": "vote canceled"
+                    },
+                    status=200
+                )
+
+            else:
+                print(game.voted_users.all())
+                return Response({
+                    "status": 406,
+                    "Description": "user doesn't voted"
+                },
+                    status=406
+                )
