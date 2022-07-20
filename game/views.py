@@ -187,7 +187,7 @@ def vote(request, game_id):
                 return Response({
                     "status": 200,
                     "Description": "vote canceled"
-                    },
+                },
                     status=200
                 )
 
