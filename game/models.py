@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 class Game(models.Model):
     title = models.CharField(max_length=256)
     voted_users = models.ManyToManyField(User, related_name='voted_users', blank=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
 
     def clean(self):
         if not self.title:
