@@ -56,3 +56,8 @@ class GameSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['author'] = instance.author.username
+        return representation
