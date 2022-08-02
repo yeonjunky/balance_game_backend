@@ -27,7 +27,7 @@ class GameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('id', 'title', 'choices', )
+        fields = ('id', 'title', 'choices', 'author', )
 
     def create(self, validated_data):
         choices_data = validated_data.pop('choices')
