@@ -201,3 +201,18 @@ def vote(request, game_id):
                 },
                     status=406
                 )
+
+
+@api_view(['GET'])
+def posted_games(request, username):
+    if request.method == 'GET':
+        user = User.objects.get(username__exact=username)
+        serializer = PostedGameSerializer(user.games.all(), many=True)
+
+        return Response({
+            'status': 200,
+            'user': username,
+            'games': serializer.data
+        },
+            status=200
+        )
