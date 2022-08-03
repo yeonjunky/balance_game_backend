@@ -61,3 +61,24 @@ class GameSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['author'] = instance.author.username
         return representation
+
+
+class AbstractChoiceSerializer(serializers.ModelSerializer):
+    """
+    This class is Read-Only
+    """
+    class Meta:
+        model = Choice
+        fields = ('text', 'votes')
+
+
+class PostedGameSerializer(serializers.ModelSerializer):
+    """
+    This class is Read-Only
+    """
+
+    choices = AbstractChoiceSerializer(many=True)
+
+    class Meta:
+        model = Game
+        fields = ('id', 'title', 'choices', )
