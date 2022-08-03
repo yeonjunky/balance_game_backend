@@ -42,6 +42,8 @@ def games(request, game_id=0):
 
     elif request.method == 'POST':
         data = request.data
+        data['author'] = request.user.id
+
         serializer = GameSerializer(data=data)
 
         try:
