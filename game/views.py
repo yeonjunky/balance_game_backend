@@ -179,7 +179,6 @@ def vote(request, game_id):
             user = request.user
 
             if game.voted_users.filter(id=user.id).exists():
-                # votes = game.votes.all()
                 v = game.votes.filter(side=data['vote'])[0]
 
                 v.users.remove(user)
@@ -196,7 +195,6 @@ def vote(request, game_id):
                 )
 
             else:
-                print(game.voted_users.all())
                 return Response({
                     "status": 406,
                     "Description": "user doesn't voted"
